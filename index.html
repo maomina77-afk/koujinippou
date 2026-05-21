@@ -26,6 +26,18 @@
         .btn-manage { background-color: #7f8c8d; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; font-size: 0.9em; margin-bottom: 10px; }
         .data-management { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 8px; margin-top: 20px; }
         .btn-clear { background-color: #e74c3c; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; font-size: 1em; margin-bottom: 20px; }
+        
+        /* 追記用ボタンとモーダルのスタイル */
+        .input-with-btn { display: flex; gap: 5px; margin-bottom: 10px; }
+        .input-with-btn input { margin-bottom: 0; flex: 1; }
+        .btn-append { background: #34495e; color: white; border: none; border-radius: 6px; padding: 0 15px; font-size: 0.9em; white-space: nowrap; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+        .modal-content { background: white; margin: 20% auto; padding: 20px; width: 90%; max-width: 400px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-title { margin-top: 0; font-size: 1.1em; color: var(--primary-color); border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .chip { display: inline-block; background: #e0e0e0; padding: 10px 15px; margin: 5px; border-radius: 20px; font-size: 0.95em; cursor: pointer; color: #333; border: 1px solid #ccc; }
+        .chip:active { background: #ccc; }
+        .btn-close-modal { background: #95a5a6; color: white; padding: 12px; border: none; border-radius: 6px; width: 100%; font-size: 1em; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -70,21 +82,37 @@
         <fieldset>
             <legend>作業内容・使用資材</legend>
             <label>本日の作業内容</label>
-            <input type="text" name="work_details" list="list-work_details" placeholder="掘削・土砂運搬など">
+            <div class="input-with-btn">
+                <input type="text" name="work_details" placeholder="掘削など">
+                <button type="button" class="btn-append" onclick="openCandidateModal(this, 'work_details', '作業内容の候補')">＋候補</button>
+            </div>
             
             <label>使用重機・車両</label>
-            <input type="text" name="machines" list="list-machines" placeholder="バックホウ1台など">
+            <div class="input-with-btn">
+                <input type="text" name="machines" placeholder="バックホウ1台など">
+                <button type="button" class="btn-append" onclick="openCandidateModal(this, 'machines', '重機・車両の候補')">＋候補</button>
+            </div>
 
             <label>使用資材</label>
-            <input type="text" name="materials" list="list-materials" placeholder="RC-40 20m3">
+            <div class="input-with-btn">
+                <input type="text" name="materials" placeholder="RC-40 20m3">
+                <button type="button" class="btn-append" onclick="openCandidateModal(this, 'materials', '資材の候補')">＋候補</button>
+            </div>
         </fieldset>
 
         <fieldset>
             <legend>安全・指示事項</legend>
             <label>安全指示・ヒヤリハット</label>
-            <input type="text" name="safety" list="list-safety" placeholder="声掛け徹底など">
+            <div class="input-with-btn">
+                <input type="text" name="safety" placeholder="声掛け徹底など">
+                <button type="button" class="btn-append" onclick="openCandidateModal(this, 'safety', '安全指示の候補')">＋候補</button>
+            </div>
+
             <label>指示・申し送り</label>
-            <input type="text" name="instructions" list="list-instructions" placeholder="明日は〇〇搬入">
+            <div class="input-with-btn">
+                <input type="text" name="instructions" placeholder="明日は〇〇搬入">
+                <button type="button" class="btn-append" onclick="openCandidateModal(this, 'instructions', '指示・申し送りの候補')">＋候補</button>
+            </div>
         </fieldset>
 
         <button type="button" class="btn-submit" onclick="submitForm()">日報を送信・保存 (CSV)</button>
@@ -103,38 +131,44 @@
     </div>
 </div>
 
-<script>
-    // 候補として管理するフィールドのリスト
-    const candidateFields = ['const_name', 'sub_name', 'worker_name', 'job_type', 'work_details', 'machines', 'materials', 'safety', 'instructions'];
-    const CANDIDATES_KEY = 'nippo_candidates_v2';
-    const DRAFT_KEY = 'nippo_draft_v1';
-    let candidatesData = {};
+<div id="candidateModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle" class="modal-title">候補から追加</h3>
+        <div id="candidateList"></div>
+        <button type="button" class="btn-close-modal" onclick="closeCandidateModal()">閉じる</button>
+    </div>
+</div>
 
-    // 初期化：データリスト枠の作成
+<script>
+    const candidateFields = ['const_name', 'sub_name', 'worker_name', 'job_type', 'work_details', 'machines', 'materials', 'safety', 'instructions'];
+    const appendableFields = ['job_type', 'work_details', 'machines', 'materials', 'safety', 'instructions'];
+    const CANDIDATES_KEY = 'nippo_candidates_v3';
+    const DRAFT_KEY = 'nippo_draft_v2';
+    let candidatesData = {};
+    let currentTargetInput = null;
+
     const datalistsContainer = document.getElementById('datalists-container');
     candidateFields.forEach(field => {
         candidatesData[field] = [];
-        datalistsContainer.insertAdjacentHTML('beforeend', `<datalist id="list-${field}"></datalist>`);
+        // 追記項目以外はサジェスト(datalist)を利用する
+        if (!appendableFields.includes(field)) {
+            datalistsContainer.insertAdjacentHTML('beforeend', `<datalist id="list-${field}"></datalist>`);
+        }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
         loadCandidatesFromLocal();
-        loadFormState(); // 下書きの復元
-        
-        // フォーム内の入力があるたびに自動保存
+        loadFormState();
         document.getElementById('dailyReportForm').addEventListener('input', saveFormState);
         document.getElementById('dailyReportForm').addEventListener('change', saveFormState);
     });
 
-    // --- 【1】下書きの自動保存・復元 ---
     function saveFormState() {
         const formData = { workers: [] };
-        // 基本項目
         ['date', 'weather', 'const_name', 'work_details', 'machines', 'materials', 'safety', 'instructions'].forEach(name => {
             const el = document.querySelector(`[name="${name}"]`);
             if(el) formData[name] = el.value;
         });
-        // 出面項目
         document.querySelectorAll('.worker-card').forEach(card => {
             formData.workers.push({
                 sub_name: card.querySelector('[name="sub_name"]').value,
@@ -155,7 +189,7 @@
                 if(formData[name]) document.querySelector(`[name="${name}"]`).value = formData[name];
             });
             if (formData.workers && formData.workers.length > 0) {
-                document.getElementById('worker-container').innerHTML = ''; // 一旦クリア
+                document.getElementById('worker-container').innerHTML = '';
                 formData.workers.forEach(w => addWorkerCard(w));
             } else {
                 if(document.querySelectorAll('.worker-card').length === 0) addWorkerCard();
@@ -174,7 +208,6 @@
         }
     }
 
-    // --- 【2】出面カード処理 ---
     function addWorkerCard(data = {}) {
         const container = document.getElementById('worker-container');
         const cardId = Date.now() + Math.random().toString(36).substr(2, 5);
@@ -203,7 +236,10 @@
                     </div>
                 </div>
                 <label>職種</label>
-                <input type="text" name="job_type" list="list-job_type" value="${data.job_type || ''}" placeholder="土工・運転手など">
+                <div class="input-with-btn">
+                    <input type="text" name="job_type" value="${data.job_type || ''}" placeholder="土工・運転手など">
+                    <button type="button" class="btn-append" onclick="openCandidateModal(this, 'job_type', '職種の候補')">＋候補</button>
+                </div>
             </div>
         `;
         container.insertAdjacentHTML('beforeend', cardHtml);
@@ -222,13 +258,11 @@
         const cards = document.querySelectorAll('.worker-card');
         const contractorCountsDiv = document.getElementById('contractor-counts');
         let totals = {}, grandTotal = 0;
-
         cards.forEach(card => {
             const nameInput = card.querySelector('input[name="sub_name"]').value.trim() || "未入力業者";
             totals[nameInput] = (totals[nameInput] || 0) + 1;
             grandTotal++;
         });
-
         contractorCountsDiv.innerHTML = '';
         for (let contractor in totals) {
             contractorCountsDiv.innerHTML += `<div class="summary-item"><span>${contractor}</span><span>${totals[contractor]} 名</span></div>`;
@@ -236,11 +270,9 @@
         document.getElementById('grand-total').innerText = grandTotal;
     }
 
-    // --- 【3】CSV送信処理 ---
     function submitForm() {
         const getVal = (name) => {
             const el = document.querySelector(`[name="${name}"]`);
-            // 改行やダブルクォーテーションをエスケープしてCSV崩れを防ぐ
             return el ? el.value.replace(/\r?\n/g, ' ').replace(/"/g, '""') : "";
         };
 
@@ -261,7 +293,6 @@
             if(sub || worker) workerText += `[${sub}:${worker}] `;
         });
 
-        // 修正：Excelが正しく読み込めるように行末を \r\n に統一
         const csvHeader = "\uFEFF日付,天候,工事名,合計人数,作業内容,使用重機,使用資材,安全指示,申し送り,出面詳細\r\n";
         const csvRow = `"${date}","${weather}","${constName}","${total}","${workDetails}","${machines}","${materials}","${safety}","${instructions}","${workerText}"\r\n`;
 
@@ -271,11 +302,52 @@
         link.download = `日報_${date}.csv`;
         link.click();
         
-        // 提出と同時に現在の入力を候補リストに記憶させる（便利機能）
         saveCurrentToCandidates(true);
     }
 
-    // --- 【4】入力候補リストの管理 ---
+    // --- モーダル（複数追記）関連 ---
+    function openCandidateModal(btnElement, fieldKey, title) {
+        currentTargetInput = btnElement.previousElementSibling;
+        document.getElementById('modalTitle').innerText = title;
+        
+        const listDiv = document.getElementById('candidateList');
+        listDiv.innerHTML = '';
+        
+        const candidates = candidatesData[fieldKey] || [];
+        if(candidates.length === 0) {
+            listDiv.innerHTML = '<p style="color:#666;">候補が登録されていません。<br>入力後に画面下の「現在の全入力を候補に記憶する」を押してください。</p>';
+        } else {
+            candidates.forEach(val => {
+                const btn = document.createElement('span');
+                btn.className = 'chip';
+                btn.innerText = val;
+                btn.onclick = () => appendToInput(val);
+                listDiv.appendChild(btn);
+            });
+        }
+        document.getElementById('candidateModal').style.display = 'block';
+    }
+
+    function closeCandidateModal() {
+        document.getElementById('candidateModal').style.display = 'none';
+        currentTargetInput = null;
+    }
+
+    function appendToInput(val) {
+        if(currentTargetInput) {
+            let currentVal = currentTargetInput.value.trim();
+            if(currentVal) {
+                // すでに入力されている場合は「、」で区切って追記
+                currentTargetInput.value = currentVal + '、' + val;
+            } else {
+                currentTargetInput.value = val;
+            }
+            saveFormState();
+        }
+        closeCandidateModal();
+    }
+
+    // --- 候補管理 ---
     function loadCandidatesFromLocal() {
         const saved = localStorage.getItem(CANDIDATES_KEY);
         if (saved) candidatesData = JSON.parse(saved);
@@ -284,19 +356,21 @@
 
     function updateDatalists() {
         candidateFields.forEach(field => {
-            const datalist = document.getElementById(`list-${field}`);
-            if(datalist) {
-                datalistsContainer.removeChild(datalist);
-                const newList = document.createElement('datalist');
-                newList.id = `list-${field}`;
-                if(candidatesData[field]) {
-                    candidatesData[field].forEach(val => {
-                        const option = document.createElement('option');
-                        option.value = val;
-                        newList.appendChild(option);
-                    });
+            if (!appendableFields.includes(field)) {
+                const datalist = document.getElementById(`list-${field}`);
+                if(datalist) {
+                    datalistsContainer.removeChild(datalist);
+                    const newList = document.createElement('datalist');
+                    newList.id = `list-${field}`;
+                    if(candidatesData[field]) {
+                        candidatesData[field].forEach(val => {
+                            const option = document.createElement('option');
+                            option.value = val;
+                            newList.appendChild(option);
+                        });
+                    }
+                    datalistsContainer.appendChild(newList);
                 }
-                datalistsContainer.appendChild(newList);
             }
         });
     }
@@ -305,10 +379,17 @@
         candidateFields.forEach(field => {
             if(!candidatesData[field]) candidatesData[field] = [];
             document.querySelectorAll(`[name="${field}"]`).forEach(input => {
-                const val = input.value.trim();
-                // 重複排除して保存
-                if (val && !candidatesData[field].includes(val)) {
-                    candidatesData[field].push(val);
+                const valRaw = input.value.trim();
+                if(valRaw) {
+                    // 追記項目の場合、「、」や「,」で分割して別々に登録する
+                    if (appendableFields.includes(field)) {
+                        const splitVals = valRaw.split(/[、,]/).map(v => v.trim()).filter(v => v);
+                        splitVals.forEach(v => {
+                            if (!candidatesData[field].includes(v)) candidatesData[field].push(v);
+                        });
+                    } else {
+                        if (!candidatesData[field].includes(valRaw)) candidatesData[field].push(valRaw);
+                    }
                 }
             });
         });
@@ -348,11 +429,10 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             const lines = e.target.result.split(/\r?\n/);
-            candidateFields.forEach(field => candidatesData[field] = []); // クリア
+            candidateFields.forEach(field => candidatesData[field] = []); 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                // 簡易CSVパース（"カテゴリ","値"）
                 const match = line.match(/^"([^"]+)","(.*)"$/);
                 if (match) {
                     const category = match[1];
