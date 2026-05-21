@@ -309,13 +309,44 @@
     // 初回実行
     addWorkerCard();
 
-    // 送信処理（デモ用）
-    function submitForm() {
-        const form = document.getElementById('dailyReportForm');
-        alert("日報データを集計しました。Excel連携用システムへ送信可能です。\n合計人数: " + document.getElementById('grand-total').innerText + "名");
-        console.log("Form Submitted");
-    }
-</script>
+    // 送信処理（csv）
+function submitForm() {
+        // 基本情報の取得
+        const date = document.getElementById('today').value;
+        const weather = document.querySelector('select[name="weather"]').value;
+        const constName = document.querySelector('input[name="const_name"]').value || "";
+        
+        // 作業内容等の取得（改行をスペースに変換してCSVが崩れないようにする）
+        const workDetails = document.querySelector('textarea[name="work_details"]').value.replace(/\r?\n/g, ' ');
+        const machines = document.querySelector('input[name="machines"]').value || "";
+        const materials = document.querySelector('input[name="materials"]').value || "";
+        const safety = document.querySelector('textarea[name="safety"]').value.replace(/\r?\n/g, ' ');
+        const instructions = document.querySelector('textarea[name="instructions"]').value.replace(/\r?\n/g, ' ');
+        const total = document.getElementById('grand-total').innerText;
+
+        // 出面情報（業者や氏名）を1つのテキストにまとめる
+        const cards = document.querySelectorAll('.worker-card');
+        let workerText = "";
+        cards.forEach(card => {
+            const sub = card.querySelector('input[name="sub_name"]').value || "";
+            const worker = card.querySelector('input[name="worker_name"]').value || "";
+            if(sub || worker) workerText += `[${sub}:${worker}] `;
+        });
+
+        // CSVのヘッダー（1行目）とデータ（2行目）を作成
+        // Excelでの文字化けを防ぐため、BOM（\uFEFF）を付与
+        const csvHeader = "\uFEFF日付,天候,工事名,合計人数,作業内容,使用重機,使用資材,安全指示,申し送り,出面詳細\n";
+        
+        // ダブルクォーテーションで囲んでカンマ区切りにする
+        const csvRow = `"${date}","${weather}","${constName}","${total}","${workDetails}","${machines}","${materials}","${safety}","${instructions}","${workerText}"\n`;
+
+        // CSVファイルとしてダウンロード
+        const blob = new Blob([csvHeader + csvRow], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `日報_${date}.csv`;
+        link.click();
+    }/script>
 
 </body>
 </html>
