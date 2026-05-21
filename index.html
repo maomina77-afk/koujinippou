@@ -1,296 +1,321 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>工事日報入力フォーム</title>
-<style>
-    body {
-        font-family: sans-serif;
-        background-color: #f4f7f6;
-        color: #333;
-        margin: 0;
-        padding: 10px;
-    }
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    h1 {
-        text-align: center;
-        font-size: 1.5em;
-        margin-bottom: 20px;
-        color: #2c3e50;
-    }
-    fieldset {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 20px;
-        padding: 15px;
-    }
-    legend {
-        font-weight: bold;
-        color: #2980b9;
-        background: #fff;
-        padding: 0 5px;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        font-size: 0.9em;
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="date"],
-    select,
-    textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 1em;
-    }
-    /* スマートフォン向けに入力しやすい高さに */
-    textarea {
-        resize: vertical;
-        min-height: 80px;
-    }
-    .flex-row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    .flex-row > div {
-        flex: 1;
-        min-width: 120px;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    th {
-        background-color: #f2f2f2;
-        font-size: 0.85em;
-    }
-    .btn-submit {
-        background-color: #3498db;
-        color: white;
-        padding: 15px 20px;
-        border: none;
-        border-radius: 4px;
-        width: 100%;
-        font-size: 1.2em;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .btn-submit:hover {
-        background-color: #2980b9;
-    }
-    .btn-add {
-        background-color: #2ecc71;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 0.9em;
-        margin-top: 5px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工事日報（スマホ最適化版）</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background-color: #fcfcfc;
+        }
+
+        legend {
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 0 8px;
+            font-size: 0.95em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px; /* スマホでズームされないためのサイズ */
+            margin-bottom: 10px;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .flex-row > div {
+            flex: 1;
+        }
+
+        /* 出面情報のカードスタイル */
+        .worker-card {
+            background: #fff;
+            border: 1px solid #ced4da;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .worker-card .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* 集計表示エリア */
+        .summary-area {
+            background: #eef7ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            border: 1px solid #bde0ff;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .total-highlight {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e67e22;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+
+        .btn-add {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <h1>工事日報</h1>
-    <form action="#" method="POST">
-
-        <datalist id="construction-names">
-            <option value="〇〇道路改良工事"></option>
-            <option value="△△河川改修工事"></option>
-        </datalist>
-        <datalist id="site-names">
-            <option value="第1工区"></option>
-            <option value="第2工区"></option>
+    <form id="dailyReportForm">
+        
+        <datalist id="sub-contractors">
+            <option value="〇〇建設"></option>
+            <option value="△△電工"></option>
+            <option value="□□設備"></option>
         </datalist>
 
         <fieldset>
             <legend>基本情報</legend>
             <div class="flex-row">
-                <div class="form-group">
-                    <label for="date">日付</label>
-                    <input type="date" id="date" name="date" required>
+                <div>
+                    <label>日付</label>
+                    <input type="date" name="date" id="today">
                 </div>
-                <div class="form-group">
-                    <label for="weather">天候</label>
-                    <select id="weather" name="weather">
-                        <option value="晴れ">晴れ</option>
-                        <option value="曇り">曇り</option>
-                        <option value="雨">雨</option>
-                        <option value="雪">雪</option>
+                <div>
+                    <label>天候</label>
+                    <select name="weather">
+                        <option>晴れ</option><option>曇り</option><option>雨</option><option>雪</option>
                     </select>
                 </div>
             </div>
-            <div class="flex-row">
-                <div class="form-group">
-                    <label for="temp-max">最高気温 (℃)</label>
-                    <input type="number" id="temp-max" name="temp-max" step="0.1">
+            <label>工事名</label>
+            <input type="text" name="const_name" placeholder="〇〇道路改良工事">
+        </fieldset>
+
+        <fieldset>
+            <legend>出面情報（業者・作業員）</legend>
+            <div id="worker-container">
                 </div>
-                <div class="form-group">
-                    <label for="temp-min">最低気温 (℃)</label>
-                    <input type="number" id="temp-min" name="temp-min" step="0.1">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="const-name">工事名</label>
-                <input type="text" id="const-name" name="const-name" list="construction-names" placeholder="選択または入力">
-            </div>
-            <div class="flex-row">
-                <div class="form-group">
-                    <label for="prime-contractor">元請名</label>
-                    <input type="text" id="prime-contractor" name="prime-contractor">
-                </div>
-                <div class="form-group">
-                    <label for="site-name">現場名 / 場所</label>
-                    <input type="text" id="site-name" name="site-name" list="site-names">
-                </div>
-            </div>
-            <div class="flex-row">
-                <div class="form-group">
-                    <label for="company-name">会社名</label>
-                    <input type="text" id="company-name" name="company-name" value="株式会社〇〇" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="submitter">提出者名</label>
-                    <input type="text" id="submitter" name="submitter">
+            
+            <button type="button" class="btn-add" onclick="addWorkerCard()">＋ 作業員・外注を追加</button>
+
+            <div class="summary-area" id="summary-area">
+                <div id="contractor-counts">
+                    </div>
+                <div class="summary-item total-highlight">
+                    <span>合計人数</span>
+                    <span><span id="grand-total">0</span> 名</span>
                 </div>
             </div>
         </fieldset>
 
         <fieldset>
-            <legend>当社（職員）</legend>
-            <div class="flex-row">
-                <div class="form-group" style="flex: 0.3;">
-                    <label for="staff-count">人数</label>
-                    <input type="number" id="staff-count" name="staff-count" min="0">
-                </div>
-                <div class="form-group" style="flex: 2;">
-                    <label for="staff-names">氏名</label>
-                    <input type="text" id="staff-names" name="staff-names" placeholder="例: 葛本、山田">
-                </div>
-            </div>
+            <legend>作業内容・使用資材</legend>
+            <label>本日の作業内容</label>
+            <textarea name="work_details" rows="3" placeholder="掘削・土砂運搬など"></textarea>
+            
+            <label>使用重機・車両</label>
+            <input type="text" name="machines" placeholder="バックホウ1台、4tダンプ2台">
+
+            <label>使用資材</label>
+            <input type="text" name="materials" placeholder="RC-40 20m3">
         </fieldset>
 
         <fieldset>
-            <legend>出面情報</legend>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>業者名</th>
-                            <th>次</th>
-                            <th>職種</th>
-                            <th>氏名</th>
-                            <th>実働(h)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="sub-name[]" placeholder="〇〇建設"></td>
-                            <td><input type="number" name="sub-tier[]" placeholder="1" style="width: 50px;"></td>
-                            <td><input type="text" name="job-type[]" placeholder="土工"></td>
-                            <td><input type="text" name="worker-name[]"></td>
-                            <td><input type="number" name="work-hours[]" step="0.5" style="width: 60px;"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="btn-add">＋ 行を追加</button>
-            <div class="form-group" style="margin-top: 10px;">
-                <label for="total-workers">合計人数</label>
-                <input type="number" id="total-workers" name="total-workers" min="0">
-            </div>
+            <legend>安全・指示事項</legend>
+            <label>安全指示・ヒヤリハット</label>
+            <textarea name="safety" rows="2"></textarea>
+            <label>指示・申し送り</label>
+            <textarea name="instructions" rows="2"></textarea>
         </fieldset>
 
-        <fieldset>
-            <legend>作業内容・工種 / 重機・車両</legend>
-            <div class="form-group">
-                <label for="work-details">具体的な作業内容</label>
-                <textarea id="work-details" name="work-details" placeholder="例: 掘削作業、残土搬出"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="machinery">使用重機・車両・数量</label>
-                <textarea id="machinery" name="machinery" placeholder="例: バックホウ 0.28m3 × 1台、 4tダンプ × 2台"></textarea>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>使用資材</legend>
-            <div class="form-group">
-                <label for="materials">品名・使用数量・残量</label>
-                <textarea id="materials" name="materials" placeholder="例: 生コン 18-8-40 (10m3 / 残 0m3)"></textarea>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>安全・特記事項</legend>
-            <div class="form-group">
-                <label for="safety">ヒヤリハット・安全確認事項</label>
-                <textarea id="safety" name="safety"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="instructions">現場の指示・申し送り事項</label>
-                <textarea id="instructions" name="instructions"></textarea>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>進捗状況・その他</legend>
-            <div class="flex-row">
-                <div class="form-group">
-                    <label for="progress">今日の進捗度 (%)</label>
-                    <input type="number" id="progress" name="progress" min="0" max="100">
-                </div>
-                <div class="form-group">
-                    <label for="tomorrow-plan">翌日の予定</label>
-                    <input type="text" id="tomorrow-plan" name="tomorrow-plan">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="documents">提出書類</label>
-                <input type="text" id="documents" name="documents">
-            </div>
-            <div class="form-group">
-                <label for="witness">立会</label>
-                <input type="text" id="witness" name="witness">
-            </div>
-            <div class="form-group">
-                <label for="meeting">打合せ内容</label>
-                <textarea id="meeting" name="meeting"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="remarks">備考</label>
-                <textarea id="remarks" name="remarks"></textarea>
-            </div>
-        </fieldset>
-
-        <button type="submit" class="btn-submit">日報を送信（保存）する</button>
+        <button type="button" class="btn-submit" onclick="submitForm()">日報を送信・保存</button>
     </form>
 </div>
+
+<script>
+    // 今日の日付を初期セット
+    document.getElementById('today').valueAsDate = new Date();
+
+    // 出面カードの追加
+    function addWorkerCard() {
+        const container = document.getElementById('worker-container');
+        const cardId = Date.now(); // 一意のID
+        
+        const cardHtml = `
+            <div class="worker-card" id="card-${cardId}">
+                <button type="button" class="remove-btn" onclick="removeCard(${cardId})">✕</button>
+                <div class="flex-row">
+                    <div style="flex: 2;">
+                        <label>業者名</label>
+                        <input type="text" name="sub_name" list="sub-contractors" placeholder="業者名" oninput="updateSummary()">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>次</label>
+                        <input type="number" name="sub_tier" placeholder="1" value="1">
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <div style="flex: 2;">
+                        <label>氏名</label>
+                        <input type="text" name="worker_name" placeholder="作業員氏名" oninput="updateSummary()">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>実働(h)</label>
+                        <input type="number" name="work_hours" value="8" step="0.5">
+                    </div>
+                </div>
+                <label>職種</label>
+                <input type="text" name="job_type" placeholder="土工・運転手など">
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+        updateSummary();
+    }
+
+    // カードの削除
+    function removeCard(id) {
+        const card = document.getElementById(`card-${id}`);
+        card.remove();
+        updateSummary();
+    }
+
+    // 集計の更新
+    function updateSummary() {
+        const cards = document.querySelectorAll('.worker-card');
+        const contractorCountsDiv = document.getElementById('contractor-counts');
+        const grandTotalSpan = document.getElementById('grand-total');
+        
+        let totals = {};
+        let grandTotal = 0;
+
+        cards.forEach(card => {
+            const nameInput = card.querySelector('input[name="sub_name"]').value.trim() || "未入力業者";
+            const workerName = card.querySelector('input[name="worker_name"]').value.trim();
+            
+            // 氏名が入力されている場合のみカウント（または最低限カードがあればカウントする場合は条件変更）
+            totals[nameInput] = (totals[nameInput] || 0) + 1;
+            grandTotal++;
+        });
+
+        // 業者ごとの人数を表示
+        contractorCountsDiv.innerHTML = '';
+        for (let contractor in totals) {
+            const item = document.createElement('div');
+            item.className = 'summary-item';
+            item.innerHTML = `<span>${contractor}</span><span>${totals[contractor]} 名</span>`;
+            contractorCountsDiv.appendChild(item);
+        }
+
+        grandTotalSpan.innerText = grandTotal;
+    }
+
+    // 初回実行
+    addWorkerCard();
+
+    // 送信処理（デモ用）
+    function submitForm() {
+        const form = document.getElementById('dailyReportForm');
+        alert("日報データを集計しました。Excel連携用システムへ送信可能です。\n合計人数: " + document.getElementById('grand-total').innerText + "名");
+        console.log("Form Submitted");
+    }
+</script>
 
 </body>
 </html>
