@@ -5,176 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工事日報（スマホ最適化版）</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --border-color: #ddd;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 10px;
-            line-height: 1.4;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 1.4em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-        }
-
-        fieldset {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 20px;
-            padding: 12px;
-            background-color: #fcfcfc;
-        }
-
-        legend {
-            font-weight: bold;
-            color: var(--primary-color);
-            padding: 0 8px;
-            font-size: 0.95em;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.85em;
-            color: #555;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .flex-row > div {
-            flex: 1;
-        }
-
-        .worker-card {
-            background: #fff;
-            border: 1px solid #ced4da;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .worker-card .remove-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .summary-area {
-            background: #eef7ff;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9em;
-            border: 1px solid #bde0ff;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .total-highlight {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #e67e22;
-            border-top: 1px solid #ccc;
-            padding-top: 5px;
-            margin-top: 5px;
-        }
-
-        .btn-add {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            width: 100%;
-            font-size: 1em;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .btn-submit {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 6px;
-            width: 100%;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        /* 候補データ管理用のボタンスタイル */
-        .btn-manage {
-            background-color: #7f8c8d;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            width: 100%;
-            font-size: 0.9em;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        .btn-manage:hover { background-color: #95a5a6; }
-        .data-management {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
+        :root { --primary-color: #3498db; --secondary-color: #2ecc71; --bg-color: #f4f7f6; --text-color: #333; --border-color: #ddd; }
+        body { font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 10px; line-height: 1.4; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; font-size: 1.4em; color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+        fieldset { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; padding: 12px; background-color: #fcfcfc; }
+        legend { font-weight: bold; color: var(--primary-color); padding: 0 8px; font-size: 0.95em; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 16px; margin-bottom: 10px; }
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row > div { flex: 1; }
+        .worker-card { background: #fff; border: 1px solid #ced4da; padding: 12px; border-radius: 8px; margin-bottom: 15px; position: relative; }
+        .worker-card .remove-btn { position: absolute; top: 5px; right: 5px; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+        .summary-area { background: #eef7ff; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 0.9em; border: 1px solid #bde0ff; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .total-highlight { font-size: 1.1em; font-weight: bold; color: #e67e22; border-top: 1px solid #ccc; padding-top: 5px; margin-top: 5px; }
+        button { cursor: pointer; }
+        .btn-add { background-color: var(--secondary-color); color: white; border: none; padding: 10px; border-radius: 6px; width: 100%; font-size: 1em; margin-bottom: 10px; }
+        .btn-submit { background-color: var(--primary-color); color: white; padding: 15px; border: none; border-radius: 6px; width: 100%; font-size: 1.2em; font-weight: bold; margin-top: 10px; }
+        .btn-manage { background-color: #7f8c8d; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; font-size: 0.9em; margin-bottom: 10px; }
+        .data-management { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 8px; margin-top: 20px; }
+        .btn-clear { background-color: #e74c3c; color: white; padding: 10px; border: none; border-radius: 6px; width: 100%; font-size: 1em; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -182,14 +33,9 @@
 <div class="container">
     <h1>工事日報</h1>
     
-    <datalist id="list-const-names"></datalist>
-    <datalist id="list-sub-contractors"></datalist>
-    <datalist id="list-job-types"></datalist>
-    <datalist id="list-machines"></datalist>
-    <datalist id="list-materials"></datalist>
+    <div id="datalists-container"></div>
 
     <form id="dailyReportForm">
-        
         <fieldset>
             <legend>基本情報</legend>
             <div class="flex-row">
@@ -205,15 +51,13 @@
                 </div>
             </div>
             <label>工事名</label>
-            <input type="text" name="const_name" list="list-const-names" placeholder="選択または入力">
+            <input type="text" name="const_name" list="list-const_name" placeholder="選択または入力">
         </fieldset>
 
         <fieldset>
             <legend>出面情報（業者・作業員）</legend>
             <div id="worker-container"></div>
-            
             <button type="button" class="btn-add" onclick="addWorkerCard()">＋ 作業員・外注を追加</button>
-
             <div class="summary-area" id="summary-area">
                 <div id="contractor-counts"></div>
                 <div class="summary-item total-highlight">
@@ -226,33 +70,33 @@
         <fieldset>
             <legend>作業内容・使用資材</legend>
             <label>本日の作業内容</label>
-            <textarea name="work_details" rows="3" placeholder="掘削・土砂運搬など"></textarea>
+            <input type="text" name="work_details" list="list-work_details" placeholder="掘削・土砂運搬など">
             
             <label>使用重機・車両</label>
-            <input type="text" name="machines" list="list-machines" placeholder="選択または入力">
+            <input type="text" name="machines" list="list-machines" placeholder="バックホウ1台など">
 
             <label>使用資材</label>
-            <input type="text" name="materials" list="list-materials" placeholder="選択または入力">
+            <input type="text" name="materials" list="list-materials" placeholder="RC-40 20m3">
         </fieldset>
 
         <fieldset>
             <legend>安全・指示事項</legend>
             <label>安全指示・ヒヤリハット</label>
-            <textarea name="safety" rows="2"></textarea>
+            <input type="text" name="safety" list="list-safety" placeholder="声掛け徹底など">
             <label>指示・申し送り</label>
-            <textarea name="instructions" rows="2"></textarea>
+            <input type="text" name="instructions" list="list-instructions" placeholder="明日は〇〇搬入">
         </fieldset>
 
         <button type="button" class="btn-submit" onclick="submitForm()">日報を送信・保存 (CSV)</button>
     </form>
+    
+    <button type="button" class="btn-clear" onclick="clearFormState()">入力内容をリセット (新規作成)</button>
 
     <div class="data-management">
         <h3 style="margin-top:0; font-size:1em; color:#856404;">入力候補の管理</h3>
-        <p style="font-size:0.8em; color:#856404;">よく使う項目（工事名、業者名、重機、資材）をリストに記憶・バックアップできます。</p>
-        
-        <button type="button" class="btn-manage" style="background-color:#f39c12;" onclick="saveCurrentToCandidates()">現在の入力を候補に記憶する</button>
+        <p style="font-size:0.8em; color:#856404;">※日付・天候以外の全項目を候補として記憶・バックアップできます。</p>
+        <button type="button" class="btn-manage" style="background-color:#f39c12;" onclick="saveCurrentToCandidates()">現在の全入力を候補に記憶する</button>
         <button type="button" class="btn-manage" onclick="exportCandidatesCSV()">候補リストをバックアップ (CSV出力)</button>
-        
         <input type="file" id="importFile" accept=".csv" style="display:none;" onchange="importCandidatesCSV(event)">
         <button type="button" class="btn-manage" onclick="document.getElementById('importFile').click()">候補リストを復元 (CSV読込)</button>
         <button type="button" class="btn-manage" style="background-color:#c0392b; margin-bottom:0;" onclick="clearCandidates()">候補リストを初期化</button>
@@ -260,57 +104,124 @@
 </div>
 
 <script>
-    // --- 【1】初期設定と出面カード処理 ---
-    document.getElementById('today').valueAsDate = new Date();
+    // 候補として管理するフィールドのリスト
+    const candidateFields = ['const_name', 'sub_name', 'worker_name', 'job_type', 'work_details', 'machines', 'materials', 'safety', 'instructions'];
+    const CANDIDATES_KEY = 'nippo_candidates_v2';
+    const DRAFT_KEY = 'nippo_draft_v1';
+    let candidatesData = {};
 
-    function addWorkerCard() {
+    // 初期化：データリスト枠の作成
+    const datalistsContainer = document.getElementById('datalists-container');
+    candidateFields.forEach(field => {
+        candidatesData[field] = [];
+        datalistsContainer.insertAdjacentHTML('beforeend', `<datalist id="list-${field}"></datalist>`);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadCandidatesFromLocal();
+        loadFormState(); // 下書きの復元
+        
+        // フォーム内の入力があるたびに自動保存
+        document.getElementById('dailyReportForm').addEventListener('input', saveFormState);
+        document.getElementById('dailyReportForm').addEventListener('change', saveFormState);
+    });
+
+    // --- 【1】下書きの自動保存・復元 ---
+    function saveFormState() {
+        const formData = { workers: [] };
+        // 基本項目
+        ['date', 'weather', 'const_name', 'work_details', 'machines', 'materials', 'safety', 'instructions'].forEach(name => {
+            const el = document.querySelector(`[name="${name}"]`);
+            if(el) formData[name] = el.value;
+        });
+        // 出面項目
+        document.querySelectorAll('.worker-card').forEach(card => {
+            formData.workers.push({
+                sub_name: card.querySelector('[name="sub_name"]').value,
+                sub_tier: card.querySelector('[name="sub_tier"]').value,
+                worker_name: card.querySelector('[name="worker_name"]').value,
+                work_hours: card.querySelector('[name="work_hours"]').value,
+                job_type: card.querySelector('[name="job_type"]').value
+            });
+        });
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
+    }
+
+    function loadFormState() {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+            const formData = JSON.parse(saved);
+            ['date', 'weather', 'const_name', 'work_details', 'machines', 'materials', 'safety', 'instructions'].forEach(name => {
+                if(formData[name]) document.querySelector(`[name="${name}"]`).value = formData[name];
+            });
+            if (formData.workers && formData.workers.length > 0) {
+                document.getElementById('worker-container').innerHTML = ''; // 一旦クリア
+                formData.workers.forEach(w => addWorkerCard(w));
+            } else {
+                if(document.querySelectorAll('.worker-card').length === 0) addWorkerCard();
+            }
+        } else {
+            document.getElementById('today').valueAsDate = new Date();
+            addWorkerCard();
+        }
+        updateSummary();
+    }
+
+    function clearFormState() {
+        if(confirm("入力中の内容をすべてリセットしますか？")){
+            localStorage.removeItem(DRAFT_KEY);
+            location.reload();
+        }
+    }
+
+    // --- 【2】出面カード処理 ---
+    function addWorkerCard(data = {}) {
         const container = document.getElementById('worker-container');
-        const cardId = Date.now();
+        const cardId = Date.now() + Math.random().toString(36).substr(2, 5);
         
         const cardHtml = `
             <div class="worker-card" id="card-${cardId}">
-                <button type="button" class="remove-btn" onclick="removeCard(${cardId})">✕</button>
+                <button type="button" class="remove-btn" onclick="removeCard('${cardId}')">✕</button>
                 <div class="flex-row">
                     <div style="flex: 2;">
                         <label>業者名</label>
-                        <input type="text" name="sub_name" list="list-sub-contractors" placeholder="業者名" oninput="updateSummary()">
+                        <input type="text" name="sub_name" list="list-sub_name" value="${data.sub_name || ''}" placeholder="業者名" oninput="updateSummary()">
                     </div>
                     <div style="flex: 1;">
                         <label>次</label>
-                        <input type="number" name="sub_tier" placeholder="1" value="1">
+                        <input type="number" name="sub_tier" value="${data.sub_tier || '1'}">
                     </div>
                 </div>
                 <div class="flex-row">
                     <div style="flex: 2;">
                         <label>氏名</label>
-                        <input type="text" name="worker_name" placeholder="作業員氏名" oninput="updateSummary()">
+                        <input type="text" name="worker_name" list="list-worker_name" value="${data.worker_name || ''}" placeholder="作業員氏名" oninput="updateSummary()">
                     </div>
                     <div style="flex: 1;">
                         <label>実働(h)</label>
-                        <input type="number" name="work_hours" value="8" step="0.5">
+                        <input type="number" name="work_hours" value="${data.work_hours || '8'}" step="0.5">
                     </div>
                 </div>
                 <label>職種</label>
-                <input type="text" name="job_type" list="list-job-types" placeholder="土工・運転手など">
+                <input type="text" name="job_type" list="list-job_type" value="${data.job_type || ''}" placeholder="土工・運転手など">
             </div>
         `;
         container.insertAdjacentHTML('beforeend', cardHtml);
         updateSummary();
+        saveFormState();
     }
 
     function removeCard(id) {
         const card = document.getElementById(`card-${id}`);
         if(card) card.remove();
         updateSummary();
+        saveFormState();
     }
 
     function updateSummary() {
         const cards = document.querySelectorAll('.worker-card');
         const contractorCountsDiv = document.getElementById('contractor-counts');
-        const grandTotalSpan = document.getElementById('grand-total');
-        
-        let totals = {};
-        let grandTotal = 0;
+        let totals = {}, grandTotal = 0;
 
         cards.forEach(card => {
             const nameInput = card.querySelector('input[name="sub_name"]').value.trim() || "未入力業者";
@@ -320,134 +231,110 @@
 
         contractorCountsDiv.innerHTML = '';
         for (let contractor in totals) {
-            const item = document.createElement('div');
-            item.className = 'summary-item';
-            item.innerHTML = `<span>${contractor}</span><span>${totals[contractor]} 名</span>`;
-            contractorCountsDiv.appendChild(item);
+            contractorCountsDiv.innerHTML += `<div class="summary-item"><span>${contractor}</span><span>${totals[contractor]} 名</span></div>`;
         }
-        grandTotalSpan.innerText = grandTotal;
+        document.getElementById('grand-total').innerText = grandTotal;
     }
 
-    addWorkerCard();
-
-    // --- 【2】日報のCSV送信（出力）処理 ---
+    // --- 【3】CSV送信処理 ---
     function submitForm() {
-        const date = document.getElementById('today').value;
-        const weather = document.querySelector('select[name="weather"]').value;
-        const constName = document.querySelector('input[name="const_name"]').value || "";
-        
-        const workDetails = document.querySelector('textarea[name="work_details"]').value.replace(/\r?\n/g, ' ');
-        const machines = document.querySelector('input[name="machines"]').value || "";
-        const materials = document.querySelector('input[name="materials"]').value || "";
-        const safety = document.querySelector('textarea[name="safety"]').value.replace(/\r?\n/g, ' ');
-        const instructions = document.querySelector('textarea[name="instructions"]').value.replace(/\r?\n/g, ' ');
+        const getVal = (name) => {
+            const el = document.querySelector(`[name="${name}"]`);
+            // 改行やダブルクォーテーションをエスケープしてCSV崩れを防ぐ
+            return el ? el.value.replace(/\r?\n/g, ' ').replace(/"/g, '""') : "";
+        };
+
+        const date = getVal('date');
+        const weather = getVal('weather');
+        const constName = getVal('const_name');
+        const workDetails = getVal('work_details');
+        const machines = getVal('machines');
+        const materials = getVal('materials');
+        const safety = getVal('safety');
+        const instructions = getVal('instructions');
         const total = document.getElementById('grand-total').innerText;
 
-        const cards = document.querySelectorAll('.worker-card');
         let workerText = "";
-        cards.forEach(card => {
-            const sub = card.querySelector('input[name="sub_name"]').value || "";
-            const worker = card.querySelector('input[name="worker_name"]').value || "";
+        document.querySelectorAll('.worker-card').forEach(card => {
+            const sub = card.querySelector('[name="sub_name"]').value || "";
+            const worker = card.querySelector('[name="worker_name"]').value || "";
             if(sub || worker) workerText += `[${sub}:${worker}] `;
         });
 
-        const csvHeader = "\uFEFF日付,天候,工事名,合計人数,作業内容,使用重機,使用資材,安全指示,申し送り,出面詳細\n";
-        const csvRow = `"${date}","${weather}","${constName}","${total}","${workDetails}","${machines}","${materials}","${safety}","${instructions}","${workerText}"\n`;
+        // 修正：Excelが正しく読み込めるように行末を \r\n に統一
+        const csvHeader = "\uFEFF日付,天候,工事名,合計人数,作業内容,使用重機,使用資材,安全指示,申し送り,出面詳細\r\n";
+        const csvRow = `"${date}","${weather}","${constName}","${total}","${workDetails}","${machines}","${materials}","${safety}","${instructions}","${workerText}"\r\n`;
 
         const blob = new Blob([csvHeader + csvRow], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = `日報_${date}.csv`;
         link.click();
+        
+        // 提出と同時に現在の入力を候補リストに記憶させる（便利機能）
+        saveCurrentToCandidates(true);
     }
 
-
-    // --- 【3】入力候補（サジェスト）の管理・バックアップ処理 ---
-    const CANDIDATES_KEY = 'nippo_candidates_v1';
-    let candidatesData = {
-        const_names: [],
-        sub_contractors: [],
-        job_types: [],
-        machines: [],
-        materials: []
-    };
-
-    // 画面読み込み時にブラウザの保存領域(localStorage)から候補を読み込む
-    window.addEventListener('DOMContentLoaded', () => {
-        loadCandidatesFromLocal();
-    });
-
+    // --- 【4】入力候補リストの管理 ---
     function loadCandidatesFromLocal() {
         const saved = localStorage.getItem(CANDIDATES_KEY);
-        if (saved) {
-            candidatesData = JSON.parse(saved);
-        }
+        if (saved) candidatesData = JSON.parse(saved);
         updateDatalists();
     }
 
     function updateDatalists() {
-        populateDatalist('list-const-names', candidatesData.const_names);
-        populateDatalist('list-sub-contractors', candidatesData.sub_contractors);
-        populateDatalist('list-job-types', candidatesData.job_types);
-        populateDatalist('list-machines', candidatesData.machines);
-        populateDatalist('list-materials', candidatesData.materials);
-    }
-
-    function populateDatalist(elementId, list) {
-        const datalist = document.getElementById(elementId);
-        if(!datalist) return;
-        datalist.innerHTML = '';
-        list.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item;
-            datalist.appendChild(option);
-        });
-    }
-
-    // 現在入力されている内容を候補リストに記憶させる
-    function saveCurrentToCandidates() {
-        const addUnique = (category, val) => {
-            const trimmed = val.trim();
-            if (trimmed && !candidatesData[category].includes(trimmed)) {
-                candidatesData[category].push(trimmed);
+        candidateFields.forEach(field => {
+            const datalist = document.getElementById(`list-${field}`);
+            if(datalist) {
+                datalistsContainer.removeChild(datalist);
+                const newList = document.createElement('datalist');
+                newList.id = `list-${field}`;
+                if(candidatesData[field]) {
+                    candidatesData[field].forEach(val => {
+                        const option = document.createElement('option');
+                        option.value = val;
+                        newList.appendChild(option);
+                    });
+                }
+                datalistsContainer.appendChild(newList);
             }
-        };
-
-        addUnique('const_names', document.querySelector('input[name="const_name"]').value);
-        addUnique('machines', document.querySelector('input[name="machines"]').value);
-        addUnique('materials', document.querySelector('input[name="materials"]').value);
-        
-        document.querySelectorAll('.worker-card').forEach(card => {
-            addUnique('sub_contractors', card.querySelector('input[name="sub_name"]').value);
-            addUnique('job_types', card.querySelector('input[name="job_type"]').value);
         });
+    }
 
-        // ブラウザに保存
+    function saveCurrentToCandidates(silent = false) {
+        candidateFields.forEach(field => {
+            if(!candidatesData[field]) candidatesData[field] = [];
+            document.querySelectorAll(`[name="${field}"]`).forEach(input => {
+                const val = input.value.trim();
+                // 重複排除して保存
+                if (val && !candidatesData[field].includes(val)) {
+                    candidatesData[field].push(val);
+                }
+            });
+        });
         localStorage.setItem(CANDIDATES_KEY, JSON.stringify(candidatesData));
         updateDatalists();
-        alert("現在の入力内容を候補リストに記憶しました。");
+        if(!silent) alert("現在入力されている全項目を候補リストに記憶しました。");
     }
 
-    // 候補リストを初期化
     function clearCandidates() {
         if(confirm("記憶している入力候補をすべて削除しますか？")){
-            candidatesData = { const_names: [], sub_contractors: [], job_types: [], machines: [], materials: [] };
+            candidateFields.forEach(field => candidatesData[field] = []);
             localStorage.setItem(CANDIDATES_KEY, JSON.stringify(candidatesData));
             updateDatalists();
             alert("初期化しました。");
         }
     }
 
-    // 候補リストをCSVでバックアップ（出力）
     function exportCandidatesCSV() {
-        let csvContent = "\uFEFFカテゴリ,値\n"; // BOM付き
-        
-        for (const category in candidatesData) {
-            candidatesData[category].forEach(val => {
-                csvContent += `"${category}","${val}"\n`;
-            });
-        }
-
+        let csvContent = "\uFEFFカテゴリ,値\r\n";
+        candidateFields.forEach(field => {
+            if(candidatesData[field]) {
+                candidatesData[field].forEach(val => {
+                    csvContent += `"${field}","${val.replace(/"/g, '""')}"\r\n`;
+                });
+            }
+        });
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -455,46 +342,33 @@
         link.click();
     }
 
-    // CSVから候補リストを復元（読込）
     function importCandidatesCSV(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
-            const text = e.target.result;
-            const lines = text.split(/\r\n|\n/);
-            
-            // 一旦クリアして上書きする
-            candidatesData = { const_names: [], sub_contractors: [], job_types: [], machines: [], materials: [] };
-
-            // 1行目はヘッダーなので i = 1 から
+            const lines = e.target.result.split(/\r?\n/);
+            candidateFields.forEach(field => candidatesData[field] = []); // クリア
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                
-                // ダブルクォーテーションを取り除いて分割
-                const parts = line.replace(/(^"|"$)/g, '').split('","');
-                if (parts.length === 2) {
-                    const category = parts[0];
-                    const val = parts[1];
+                // 簡易CSVパース（"カテゴリ","値"）
+                const match = line.match(/^"([^"]+)","(.*)"$/);
+                if (match) {
+                    const category = match[1];
+                    const val = match[2];
                     if (candidatesData[category] && !candidatesData[category].includes(val)) {
                         candidatesData[category].push(val);
                     }
                 }
             }
-
-            // ブラウザに保存して反映
             localStorage.setItem(CANDIDATES_KEY, JSON.stringify(candidatesData));
             updateDatalists();
-            alert("バックアップファイルから入力候補を復元しました。");
-            
-            // 同じファイルを再度読み込めるようにクリア
+            alert("復元しました。");
             event.target.value = '';
         };
         reader.readAsText(file);
     }
 </script>
-
 </body>
 </html>
